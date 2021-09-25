@@ -5,16 +5,16 @@ const renderBoilerPlate = function () {
   <div id="serachName">
     <form id="searchForm">
       <div class="m-3 mb-3">
-        <label for="name" class="form-label"
+        <label for="name" class="form-label h2"
           >Enter Anime Name and click Search to see the Results</label
         >
         <input
           type="text"
-          class="form-control mb-3"
+          class="form-control mb-3 fs-1"
           id="name"
           placeholder="Enter a Anime"
         />
-        <button type="submit" id="search" class="btn btn-primary">
+        <button type="submit" id="search" class="btn-lg btn-primary btn">
           Search
         </button>
       </div>
@@ -25,6 +25,7 @@ const renderBoilerPlate = function () {
       <div id="grid" class="row"></div>
     </div>
   </div>
+  <div id="display-error" class="text-danger h1 m5"></div>
 </div>`;
 
   body.insertAdjacentHTML("afterbegin", template);
@@ -37,7 +38,7 @@ const renderBoilerPlate = function () {
 const selectElements = function () {
   const domElement = {
     inputFeild: document.querySelector("#name"),
-    search: document.querySelector("#search"),
+    displayError: document.querySelector("#display-error"),
     form: document.querySelector("#searchForm"),
     grid: document.querySelector("#grid"),
   };
@@ -50,18 +51,23 @@ const selectElements = function () {
 const getAnimeResult = async function (query, domElement) {
   try {
     const res = await fetch(`https://api.jikan.moe/v3/search/anime?q=${query}`);
+    if (!res.ok)
+      throw new Error("No Element Found or Value was Blank. Please Try Again");
     const data = await res.json();
     let count = 0;
-    domElement.grid.innerHTML = "";
+    console.log(res, data);
     data.results.forEach(function (show) {
       const card = getCard(show);
 
       domElement.grid.insertAdjacentHTML("beforeend", card);
       count++;
     });
-    // console.log(count);
+    console.log(count);
   } catch (error) {
-    console.log(error);
+    //console.log(error);
+    // console.log(error.message);
+    console.log(domElement.displayError);
+    domElement.displayError.insertAdjacentText("afterbegin", error.message);
   }
 };
 //--------------------------------------------------------------
@@ -105,7 +111,10 @@ const getCard = function (data) {
 const handleSubmitEvent = function (domElement) {
   domElement.form.addEventListener("submit", function (e) {
     e.preventDefault();
+    domElement.grid.innerHTML = "";
+    domElement.displayError.innerHTML = "";
     const query = domElement.inputFeild.value;
+    domElement.form.reset();
     getAnimeResult(query, domElement);
   });
 };
