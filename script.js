@@ -46,6 +46,7 @@ const selectElements = function () {
 };
 
 //--------------------------------------------------
+
 // Async Funtion used to fetch Data
 
 const getAnimeResult = async function (query, domElement) {
@@ -107,6 +108,8 @@ const getCard = function (data) {
         </div>
 </div>`;
 };
+//---------------------------------------------------
+
 //Add Event Listener to Listen submit Event
 const handleSubmitEvent = function (domElement) {
   domElement.form.addEventListener("submit", function (e) {
@@ -118,9 +121,13 @@ const handleSubmitEvent = function (domElement) {
     getAnimeResult(query, domElement);
   });
 };
+//---------------------------------------------------
+
 //Initilize Boiler Plate and Event Listner and Dom Elements
 const init = function () {
   renderBoilerPlate();
   handleSubmitEvent(selectElements());
 };
+// Calling iniilizing funtion
 init();
+//---------------------------------------------------
