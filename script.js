@@ -56,18 +56,19 @@ const getAnimeResult = async function (query, domElement) {
       throw new Error("No Element Found or Value was Blank. Please Try Again");
     const data = await res.json();
     let count = 0;
-    console.log(res, data);
+    // console.log(res, data);
     data.results.forEach(function (show) {
+      if (show.rated === "Rx") return;
       const card = getCard(show);
 
       domElement.grid.insertAdjacentHTML("beforeend", card);
       count++;
     });
-    console.log(count);
+    // console.log(count);
   } catch (error) {
     //console.log(error);
     // console.log(error.message);
-    console.log(domElement.displayError);
+    // console.log(domElement.displayError);
     domElement.displayError.insertAdjacentText("afterbegin", error.message);
   }
 };
@@ -101,7 +102,7 @@ const getCard = function (data) {
               data.type ? data.type : "Type is not Available"
             }</p>
             <p><b>IMDB Rating: </b>${
-              data.score ? data.score : "No Rating Available"
+              data.score ? data.score.toFixed(1) : "No Rating Available"
             }</p>
           </p>
         </div>
